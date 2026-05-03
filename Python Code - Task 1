@@ -1,0 +1,32 @@
+import numpy as np
+import wave
+import serial
+import serial.tools.list_ports
+
+devices = serial.tools.list_ports.comports()
+for device in devices:
+    print(device)
+
+ser = serial.Serial("COM3", 115200)
+
+data = []
+SAMPLE_RATE = 9200
+
+for i in range(SAMPLE_RATE*10):
+    byte = ser.read(size=1)
+    byte0 = byte[0]
+    data.append(byte0)
+
+# convert list to numpy array
+data = np.array(data)
+# normalise to 0 to 255 range:
+data = (data - data.min()) / data.max() # scale to 0-1
+data = data * 255 # scale to 0-255
+data = data.astype(np.uint8) # convert to uint8 type
+
+filename = "audio_project_filter3.wav"
+with wave.open(filename, 'wb') as wf:
+    wf.setnchannels(1) # mono audio (single channel)
+    wf.setsampwidth(1) # 8 bits (1 byte ) per sample
+    wf.setframerate(SAMPLE_RATE) # set the sample rate that the data was recorded at
+    wf.writeframes(data.tobytes()) # write the audio data to the file
