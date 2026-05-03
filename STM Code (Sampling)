@@ -1,9 +1,0 @@
-/* USER CODE BEGIN WHILE */
- while (1)
- {
-	  // Sampling STM
-	  HAL_ADC_Start(&hadc1);
-	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	  uint16_t sampledValue = HAL_ADC_GetValue(&hadc1);
-	  HAL_UART_Transmit(&huart1, &sampledValue, 1, HAL_MAX_DELAY);
-   /* USER CODE END WHILE */
