@@ -1,0 +1,14 @@
+ /* USER CODE BEGIN 2 */
+ uint16_t sampledPrevious = 0;
+ uint16_t sampledCurrent = 0;
+ /* USER CODE END 2 */
+
+ /* USER CODE BEGIN WHILE */
+ while (1)
+ {
+	  // Processing STM
+	  HAL_UART_Receive(&huart1, &sampledCurrent, 1, HAL_MAX_DELAY);
+	  uint16_t sampledAverage = (sampledPrevious + sampledCurrent) / 2;
+	  HAL_UART_Transmit(&huart2, &sampledAverage, 1, HAL_MAX_DELAY);
+	  sampledPrevious = sampledCurrent;
+   /* USER CODE END WHILE */
