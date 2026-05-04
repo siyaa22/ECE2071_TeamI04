@@ -1,0 +1,56 @@
+import numpy as np
+import wave
+import serial
+import serial.tools.list_ports
+
+devices = serial.tools.list_ports.comports()
+for device in devices:
+    print(device)
+
+ser = serial.Serial("COM3", 115200)
+
+data = []
+SAMPLE_RATE = 9200
+# y do we multiply by 10
+
+#The CLI should include clear options for each operating mode.
+print("MENU\n\t--> Manual Recording mode\n\t--> Distance Trigger Mode")
+mode = input("Select Mode: ")
+
+#‘Manual Recording Mode’: This mode will allow the user to specify how long to record for in the CLI 
+# (i.e. it will no longer be hardcoded) as well as generate any of the output formats as requested by the user.
+if mode == "Manual Recording mode" or mode == "MRM" or mode == "mrm":
+    while True:
+        try:
+            SAMPLE_RATE = int(input("Input New Sample Rate"))
+            break
+        except ValueError:
+            print("Invalid Input")
+        
+#‘Distance Trigger Mode’: This mode will allow the ‘Processing’ STM to control when data is to be recorded 
+# using an ultrasonic sensor, with options to specify the user’s requested output format(s).
+elif mode == "Distance Trigger Mode" or mode == "DTM" or mode == "dtm":
+#chat i need HELLLPPPPP
+    print("")
+else: 
+    print("Incorrect Mode Input")
+
+for i in range(SAMPLE_RATE*10):
+    byte = ser.read(size=1)
+    byte0 = byte[0]
+    data.append(byte0)
+
+# convert list to numpy array
+data = np.array(data)
+
+# normalise to 0 to 255 range:
+data = (data - data.min()) / data.max() # scale to 0-1
+data = data * 255 # scale to 0-255
+data = data.astype(np.uint8) # convert to uint8 type
+
+filename = "audio_project_filter3.wav"
+with wave.open(filename, 'wb') as wf:
+    wf.setnchannels(1) # mono audio (single channel)
+    wf.setsampwidth(1) # 8 bits (1 byte ) per sample
+    wf.setframerate(SAMPLE_RATE) # set the sample rate that the data was recorded at
+    wf.writeframes(data.tobytes()) # write the audio data to the file
