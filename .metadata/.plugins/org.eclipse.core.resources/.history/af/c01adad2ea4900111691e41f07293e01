@@ -66,14 +66,7 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-	  HAL_ADC_Start(&hadc1);
-	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	  uint16_t sampledValue = HAL_ADC_GetValue(&hadc1);
-	  //case 1 or 0 to see which one to transmit
 
-	  HAL_UART_Transmit(&huart1, &sampledValue, 1, HAL_MAX_DELAY);
-}
 /* USER CODE END 0 */
 
 /**
@@ -111,7 +104,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start_IT(&hadc1)
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
