@@ -67,12 +67,14 @@ static void MX_TIM1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+	  HAL_ADC_Start(&hadc1);
+	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  uint16_t sampledValue = HAL_ADC_GetValue(&hadc1);
 
 	  //sadffasfasd read pin
 
 	  //case 1 or 0 to see which one to transmit
-	  HAL_UART_Transmit(&huart1, &sampledValue, 2, HAL_MAX_DELAY);
+	  HAL_UART_Transmit(&huart1, &sampledValue, 1, HAL_MAX_DELAY);
 
 
 
@@ -123,10 +125,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-	  //waiting to recieve from pc huart2 max delay
-
-	  //configure triggure pin
-
+	  //waiting to recieve from pc
 
 
 
